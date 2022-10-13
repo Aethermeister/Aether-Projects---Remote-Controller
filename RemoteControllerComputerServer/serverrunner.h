@@ -13,6 +13,7 @@ public:
     virtual ~ServerRunner() = default;
 
     static ServerRunner* Instance();
+    static int ConnectedClientsCount();
 
     static void StartServer();
     static void StopServer();
@@ -20,6 +21,7 @@ public:
 private:
     static ServerRunner* m_instance;
     static QPointer<QWebSocketServer> m_web_socket_server;
+    static int m_connected_clients_count;
 
 private slots:
     void NewSocketConnected() const;
