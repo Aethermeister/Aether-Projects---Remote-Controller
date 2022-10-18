@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include <QtCore/QMap>
+#include <QtWidgets/QMenu>
 
 enum class ButtonTextAlignment
 {

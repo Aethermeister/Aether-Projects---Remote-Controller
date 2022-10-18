@@ -9,9 +9,9 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    addnewconnectiondialog.cpp \
+    addnewconnectionwidget.cpp \
+    connecteddevicemanager.cpp \
     connectionlistwidget.cpp \
-    connectionlistwidgetbutton.cpp \
     filelistwidget.cpp \
     listwidgetitembutton.cpp \
     main.cpp \
@@ -21,9 +21,9 @@ SOURCES += \
     systemfunctionslistwidget.cpp
 
 HEADERS += \
-    addnewconnectiondialog.h \
+    addnewconnectionwidget.h \
+    connecteddevicemanager.h \
     connectionlistwidget.h \
-    connectionlistwidgetbutton.h \
     filelistwidget.h \
     listwidgetitembutton.h \
     mainwindow.h \
@@ -32,9 +32,8 @@ HEADERS += \
     systemfunctionslistwidget.h
 
 FORMS += \
-    addnewconnectiondialog.ui \
+    addnewconnectionwidget.ui \
     connectionlistwidget.ui \
-    connectionlistwidgetbutton.ui \
     filelistwidget.ui \
     mainwindow.ui \
     remotefunctionslistwidget.ui \
@@ -47,3 +46,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     Resources/Resources.qrc
+
+
+RC_ICONS = baseline_control_camera_white_24dp.ico

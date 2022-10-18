@@ -2,6 +2,8 @@
 #include "ui_remotefunctionslistwidget.h"
 #include "mainwindow.h"
 
+#include <QPushButton>
+
 RemoteFunctionsListWidget::RemoteFunctionsListWidget(QWebSocket *active_socket, QWidget *parent) :
     RemoteFunctionBaseWidget(active_socket, parent),
     ui(new Ui::RemoteFunctionsListWidget)
@@ -9,7 +11,7 @@ RemoteFunctionsListWidget::RemoteFunctionsListWidget(QWebSocket *active_socket, 
     ui->setupUi(this);
 
     InitializeUi();
-    connect(ui->m_disconnect_btn, &QPushButton::clicked, this, [=]() {
+    connect(MainWindow::Instance(), &MainWindow::RequestBack, this, [=]() {
         m_active_socket->close();
     });
 }

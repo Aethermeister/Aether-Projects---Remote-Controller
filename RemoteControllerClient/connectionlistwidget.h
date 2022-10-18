@@ -1,13 +1,15 @@
 #ifndef CONNECTIONLISTWIDGET_H
 #define CONNECTIONLISTWIDGET_H
 
+#include "connecteddevicemanager.h"
+
 #include <QWidget>
 
 namespace Ui {
 class ConnectionListWidget;
 }
 
-class ConnectionListWidget : public QWidget
+class ConnectionListWidget : public QWidget, public ConnectedDeviceManager
 {
     Q_OBJECT
 
@@ -18,10 +20,11 @@ public:
 private:
     Ui::ConnectionListWidget *ui;
 
-    void InitializeConnections() const;
+    void InitializeUi();
+    void ListDevices();
+    void CreateAddButton();
 
 private slots:
-    void ShowAddNewConnectionDialog();
     void ConnectToComputer();
 };
 

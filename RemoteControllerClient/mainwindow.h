@@ -20,6 +20,7 @@ public:
     static MainWindow* Instance();
 
     void ShowConnectionList();
+    void ShowAddConnectionWidget();
     void ShowRemoteFunctionsList(QWebSocket* new_socket = nullptr);
     void ShowSystemFunctionsList();
     void ShowFilesList();
@@ -30,6 +31,16 @@ private:
     static MainWindow* m_instance;
     QPointer<QWebSocket> m_active_socket;
 
+    void InitializeConnections();
+    void InitializeUi();
+
     void DeleteActualContent();
+    void ShowNewWidget(QWidget* new_widget);
+
+private slots:
+    void ShowInfoMenu();
+
+signals:
+    void RequestBack();
 };
 #endif // MAINWINDOW_H

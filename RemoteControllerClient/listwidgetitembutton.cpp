@@ -2,7 +2,6 @@
 
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QMenu>
 
 QMap<ButtonTextAlignment, QString> ListWidgetItemButton::m_button_text_alignments
 {
@@ -11,12 +10,12 @@ QMap<ButtonTextAlignment, QString> ListWidgetItemButton::m_button_text_alignment
     { ButtonTextAlignment::LEFT, "left" }
 };
 
-ListWidgetItemButton::ListWidgetItemButton(QWidget *parent) : QPushButton(parent)
+ListWidgetItemButton::ListWidgetItemButton(QWidget* parent) : QPushButton(parent)
 {
     InitializeUi();
 }
 
-ListWidgetItemButton::ListWidgetItemButton(const QString &text, QWidget *parent) : QPushButton(text, parent)
+ListWidgetItemButton::ListWidgetItemButton(const QString& text, QWidget* parent) : QPushButton(text, parent)
 {
     InitializeUi();
 }
@@ -39,8 +38,11 @@ QPushButton *ListWidgetItemButton::MoreButton() const
 void ListWidgetItemButton::InitializeUi()
 {
     m_more_button = new QPushButton(this);
+    m_more_button->setProperty("type", "menu");
+    m_more_button->setFlat(true);
     m_more_button->setFixedSize(25, 25);
-    m_more_button->setIcon(QIcon("://Images/outline_more_vert_black_24dp.png"));
+    m_more_button->setIcon(QIcon("://Images/baseline_more_vert_white_24dp.png"));
+    m_more_button->setIconSize({ 25, 25 });
 
     auto* spacer_item = new QSpacerItem(10, 10, QSizePolicy::Expanding);
 

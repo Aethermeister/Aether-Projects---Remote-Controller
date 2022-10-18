@@ -12,7 +12,7 @@ SystemFunctionsListWidget::SystemFunctionsListWidget(QWebSocket *active_socket, 
     ui->setupUi(this);
 
     InitializeUi();
-    connect(ui->m_back_btn, &QPushButton::clicked, this, [=] {
+    connect(MainWindow::Instance(), &MainWindow::RequestBack, this, [=] {
         MainWindow::Instance()->ShowRemoteFunctionsList();
     });
 }
@@ -39,7 +39,7 @@ void SystemFunctionsListWidget::CreateClientCountButton()
     auto* client_count_button = new QPushButton("Connected clients");
     ui->m_system_functions_list_widget->setItemWidget(client_count_item, client_count_button);
     connect(client_count_button, &QPushButton::clicked, this, [=] {
-        SendCommand(CreateSimpleCommand(CommandType::GET_CLIENT_COUNT));
+        SendCommand(CreateCommand(CommandType::GET_CLIENT_COUNT));
     });
 }
 
@@ -50,7 +50,7 @@ void SystemFunctionsListWidget::CreateLockWorkstationButton()
     auto* lock_workstation_button = new QPushButton("Lock Workstation");
     ui->m_system_functions_list_widget->setItemWidget(lock_workstation_item, lock_workstation_button);
     connect(lock_workstation_button, &QPushButton::clicked, this, [=] {
-        SendCommand(CreateSimpleCommand(CommandType::LOCK_WORKSTATION));
+        SendCommand(CreateCommand(CommandType::LOCK_WORKSTATION));
     });
 }
 
@@ -61,7 +61,7 @@ void SystemFunctionsListWidget::CreateShutdownButton()
     auto* shutdown_button = new ListWidgetItemButton("Shutdown", ui->m_system_functions_list_widget);
     ui->m_system_functions_list_widget->setItemWidget(shutdown_item, shutdown_button);
     connect(shutdown_button, &QPushButton::clicked, this, [=] {
-        SendCommand(CreateSimpleCommand(CommandType::SHUTDOWN_SYSTEM));
+        SendCommand(CreateCommand(CommandType::SHUTDOWN_SYSTEM));
     });
 
     connect(shutdown_button->MoreButton(), &QPushButton::clicked, this, [=] {
@@ -75,7 +75,7 @@ void SystemFunctionsListWidget::CreateShutdownButton()
         auto* cancel_action = new QAction("Cancel", more_menu);
         more_menu->addAction(cancel_action);
         connect(cancel_action, &QAction::triggered, this, [=] {
-            SendCommand(CreateSimpleCommand(CommandType::CANCEL_SHUTDOWN));
+            SendCommand(CreateCommand(CommandType::CANCEL_SHUTDOWN));
         });
 
         more_menu->exec(shutdown_button->mapToGlobal(shutdown_button->MoreButton()->pos()));
@@ -98,7 +98,7 @@ void SystemFunctionsListWidget::CreateRestartButton()
     auto* restart_button = new ListWidgetItemButton("Restart", ui->m_system_functions_list_widget);
     ui->m_system_functions_list_widget->setItemWidget(restart_item, restart_button);
     connect(restart_button, &QPushButton::clicked, this, [=] {
-        SendCommand(CreateSimpleCommand(CommandType::RESTART_SYSTEM));
+        SendCommand(CreateCommand(CommandType::RESTART_SYSTEM));
     });
 
     connect(restart_button->MoreButton(), &QPushButton::clicked, this, [=] {
@@ -112,7 +112,7 @@ void SystemFunctionsListWidget::CreateRestartButton()
         auto* cancel_action = new QAction("Cancel", more_menu);
         more_menu->addAction(cancel_action);
         connect(cancel_action, &QAction::triggered, this, [=] {
-            SendCommand(CreateSimpleCommand(CommandType::CANCEL_RESTART));
+            SendCommand(CreateCommand(CommandType::CANCEL_RESTART));
         });
 
         more_menu->exec(restart_button->mapToGlobal(restart_button->MoreButton()->pos()));
@@ -131,17 +131,11 @@ QAction *SystemFunctionsListWidget::CreateRestartActionWithTimeout(const QString
 void SystemFunctionsListWidget::ShutdownWithTimeout()
 {
     const auto timeout = sender()->property("timeout").toInt();
-    auto shutdown_command = CreateSimpleCommand(CommandType::SHUTDOWN_SYSTEM);
-    shutdown_command["timeout"] = timeout;
-
-    SendCommand(shutdown_command);
+    SendCommand(CreateCommand(CommandType::SHUTDOWN_SYSTEM, {{ "timeout", timeout }}));
 }
 
 void SystemFunctionsListWidget::RestartWithTimeout()
 {
     const auto timeout = sender()->property("timeout").toInt();
-    auto shutdown_command = CreateSimpleCommand(CommandType::RESTART_SYSTEM);
-    shutdown_command["timeout"] = timeout;
-
-    SendCommand(shutdown_command);
+    SendCommand(CreateCommand(CommandType::RESTART_SYSTEM, {{ "timeout", timeout }}));
 }

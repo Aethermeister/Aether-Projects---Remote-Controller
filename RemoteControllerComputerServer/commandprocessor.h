@@ -22,7 +22,15 @@ enum class CommandType
 
     GET_FOLDER_CONTENT,
     RESPONSE_FOLDER_CONTENT,
+    REFRESH_FOLDER_CONTENT,
+
+    GET_FILE_CONTENT,
+    RESPONSE_FILE_CONTENT,
+    DOWNLOAD_FILE,
+    RESPONSE_DOWNLOAD_FILE,
+
     DELETE_SELECTED_FILE,
+    DELETE_SELECTED_FOLDER,
 
     INVALID
 };
@@ -38,6 +46,8 @@ public:
 private:
     static QMap<QString, CommandType> CommandTypes;
 
+    static void AddCommandToResponse(QJsonObject* response_object, const QString& additional_response_command);
+
     static void GetClientCount(QJsonObject* response_object);
 
     static void LockWorkstation(QJsonObject* response_object);
@@ -49,7 +59,10 @@ private:
     static void CancelRestart(QJsonObject* response_object);
 
     static void GetFolderContent(const QJsonObject& command_object, QJsonObject* response_object);
+    static void SendSelectedFileContent(const QJsonObject& command_object, QJsonObject* response_object, CommandType original_command);
+
     static void DeleteSelectedFile(const QJsonObject& command_object, QJsonObject* response_object);
+    static void DeleteSelectedFolder(const QJsonObject& command_object, QJsonObject* response_object);
 };
 
 #endif // COMMANDPROCESSOR_H

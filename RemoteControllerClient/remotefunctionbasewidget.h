@@ -23,8 +23,15 @@ enum class CommandType
 
     GET_FOLDER_CONTENT,
     RESPONSE_FOLDER_CONTENT,
+    REFRESH_FOLDER_CONTENT,
+
     GET_FILE_CONTENT,
-    DELETE_SELECTED_FILE
+    RESPONSE_FILE_CONTENT,
+    DOWNLOAD_FILE,
+    RESPONSE_DOWNLOAD_FILE,
+
+    DELETE_SELECTED_FILE,
+    DELETE_SELECTED_FOLDER
 };
 
 class RemoteFunctionBaseWidget : public QWidget
@@ -39,8 +46,8 @@ protected:
     QWebSocket* m_active_socket;
 
     void SendCommand(const QJsonObject& command_object);
-    QJsonObject CreateSimpleCommand(CommandType command) const;
-    QJsonObject ParseResponse(const QString& response) const;
+    QJsonObject CreateCommand(CommandType command, const QMap<QString, QVariant>& properties = QMap<QString, QVariant>()) const;
+    QJsonObject ParseResponse(const QString& response, QStringList* response_commands) const;
 };
 
 #endif // REMOTEFUNCTIONBASEWIDGET_H

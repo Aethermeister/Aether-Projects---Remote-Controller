@@ -19,42 +19,60 @@ QMap<CommandType, QString> RemoteFunctionBaseWidget::CommandTypes
 
     { CommandType::GET_FOLDER_CONTENT, "get_folder_content" },
     { CommandType::RESPONSE_FOLDER_CONTENT, "response_folder_content" },
+    { CommandType::REFRESH_FOLDER_CONTENT, "refresh_folder_content" },
+
     { CommandType::GET_FILE_CONTENT, "get_file_content" },
-    { CommandType::DELETE_SELECTED_FILE, "delete_selected_file" }
+    { CommandType::RESPONSE_FILE_CONTENT, "response_file_content" },
+    { CommandType::DOWNLOAD_FILE, "download_file" },
+    { CommandType::RESPONSE_DOWNLOAD_FILE, "response_download_file" },
+
+    { CommandType::DELETE_SELECTED_FILE, "delete_selected_file" },
+    { CommandType::DELETE_SELECTED_FOLDER, "delete_selected_folder" }
 };
 
-RemoteFunctionBaseWidget::RemoteFunctionBaseWidget(QWebSocket *active_socket, QWidget *parent)
+RemoteFunctionBaseWidget::RemoteFunctionBaseWidget(QWebSocket* active_socket, QWidget* parent)
     : QWidget{parent}, m_active_socket(active_socket)
 {
     connect(m_active_socket, &QWebSocket::textMessageReceived, this, [=] (const QString& message) {
-        qDebug() << message;
+        qDebug().noquote() << message;
 
-        const auto response_object = ParseResponse(message);
-        const auto response_command = response_object.value("command").toString();
+        QStringList response_commands;
+        const auto response_object = ParseResponse(message, &response_commands);
 
-        if(CommandTypes.key(response_command) == CommandType::RESPONSE_NOTIFICATION)
+        if(response_commands.contains(CommandTypes.value(CommandType::RESPONSE_NOTIFICATION)))
         {
             QMessageBox::information(this, "Response", response_object.value("message").toString());
         }
     });
 }
 
-void RemoteFunctionBaseWidget::SendCommand(const QJsonObject &command_object)
+void RemoteFunctionBaseWidget::SendCommand(const QJsonObject& command_object)
 {
     const QJsonDocument command_json_document(command_object);
     m_active_socket->sendTextMessage(command_json_document.toJson());
 }
 
-QJsonObject RemoteFunctionBaseWidget::CreateSimpleCommand(CommandType command) const
+QJsonObject RemoteFunctionBaseWidget::CreateCommand(CommandType command, const QMap<QString, QVariant>& properties) const
 {
     QJsonObject command_object;
-    command_object["command"] = CommandTypes.value(command);
+    command_object.insert("command", CommandTypes.value(command));
+
+    for(auto it = properties.begin(); it != properties.end(); ++it)
+    {
+        command_object.insert(it.key(), it.value().toJsonValue());
+    }
 
     return command_object;
 }
 
-QJsonObject RemoteFunctionBaseWidget::ParseResponse(const QString &response) const
+QJsonObject RemoteFunctionBaseWidget::ParseResponse(const QString& response, QStringList* response_commands) const
 {
     QJsonDocument response_document = QJsonDocument::fromJson(response.toUtf8());
-    return response_document.object();
+    const auto response_object = response_document.object();
+
+    const auto raw_commands = response_object.value("command").toString();
+    *response_commands = raw_commands.split("|");
+
+
+    return response_object;
 }
