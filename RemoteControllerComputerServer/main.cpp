@@ -38,15 +38,14 @@ int main(int argc, char *argv[])
     }
 
     QCommandLineParser parser;
-    QCommandLineOption dbgOption(QStringList() << "d" << "debug",
-    QCoreApplication::translate("main", "Debug output [default: off]."));
-    parser.addOption(dbgOption);
+    QCommandLineOption dbg_option(QStringList() << "d" << "debug");
+    parser.addOption(dbg_option);
 
     parser.process(a);
 
-    Logger::Init(parser.isSet(dbgOption));
+    Logger::Init(parser.isSet(dbg_option));
 
-    qDebug().noquote() << QString("========================= %0 v%1 =========================").arg(QCoreApplication::applicationName()).arg(QCoreApplication::applicationVersion());
+    qDebug().noquote() << QString("========================= %0 v%1 =========================").arg(QCoreApplication::applicationName(), QCoreApplication::applicationVersion());
 
     ServerRunner::StartServer();
 

@@ -15,6 +15,7 @@ QWidget[type="header"]
 
 QMenu::item
 {
+    padding: 15px 25px 15px 25px;
     color: white;
 }
 

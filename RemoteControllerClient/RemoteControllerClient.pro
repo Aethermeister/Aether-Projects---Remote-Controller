@@ -49,3 +49,13 @@ RESOURCES += \
 
 
 RC_ICONS = baseline_control_camera_white_24dp.ico
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/build.gradle \
+    android/res/values/libs.xml
+
+android {
+ANDROID_PACKAGE_SOURCE_DIR = \
+    $$PWD/android
+}
